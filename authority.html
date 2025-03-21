@@ -78,7 +78,7 @@
         }
 
         function fetchSOS() {
-            fetch("http://localhost:5001/get_sos")
+            fetch("https://panic-pin-server.onrender.com/get_sos")
                 .then(response => response.json())
                 .then(sosList => {
                     if (sosList.length > 0) {
