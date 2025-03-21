@@ -77,19 +77,19 @@
             }).addTo(map);
         }
 
-function fetchSOS() {
-    fetch("https://alertobuilders.net/api/alerts") // Fetching from Alerto API
-        .then(response => response.json())
-        .then(sosList => {
-            if (sosList.length > 0) {
-                document.getElementById("output").innerHTML = `🚨 ${sosList.length} distress signals received!`;
-                updateMap(sosList);
-            } else {
-                document.getElementById("output").innerHTML = "No active distress signals.";
-            }
-        })
-        .catch(error => console.log("Error fetching SOS data from Alerto API.", error));
-}
+        function fetchSOS() {
+            fetch("https://panic-pin-server.onrender.com/get_sos")
+                .then(response => response.json())
+                .then(sosList => {
+                    if (sosList.length > 0) {
+                        document.getElementById("output").innerHTML = `🚨 ${sosList.length} distress signals received!`;
+                        updateMap(sosList);
+                    } else {
+                        document.getElementById("output").innerHTML = "No active distress signals.";
+                    }
+                })
+                .catch(error => console.log("Error fetching SOS data.", error));
+        }
 
         function updateMap(sosList) {
             if (!map) return;
