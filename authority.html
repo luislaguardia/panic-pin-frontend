@@ -46,29 +46,6 @@
             border: 5px solid #007bff;
         }
 
-        #alert-list {
-            max-width: 90%;
-            margin: 20px auto;
-            padding: 10px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .alert-item {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .alert-item:last-child {
-            border-bottom: none;
-        }
-
-        .alert-time {
-            font-size: 14px;
-            color: gray;
-        }
-
         @media (max-width: 768px) {
             #map {
                 width: 95%;
@@ -89,33 +66,26 @@
 
     <div id="map"></div>
 
-    <div id="alert-list">
-        <h3>Distress Alerts</h3>
-        <div id="alerts"></div>
-    </div>
-
     <script>
         let map;
         let markers = [];
 
         function initializeMap() {
-            map = L.map('map').setView([14.52, 121.05], 12); // Default view: Taguig
+            map = L.map('map').setView([14.52, 121.05], 12); // default view ito sa taguig naka set
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
         }
 
         function fetchSOS() {
-            fetch("https://panic-pin-backend.onrender.com/get_sos") // Vercel backend link
+            fetch("https://panic-pin-server.onrender.com/get_sos")
                 .then(response => response.json())
                 .then(sosList => {
                     if (sosList.length > 0) {
                         document.getElementById("output").innerHTML = `🚨 ${sosList.length} distress signals received!`;
                         updateMap(sosList);
-                        updateAlertList(sosList);
                     } else {
                         document.getElementById("output").innerHTML = "No active distress signals.";
-                        document.getElementById("alerts").innerHTML = "<p>No alerts available.</p>";
                     }
                 })
                 .catch(error => console.log("Error fetching SOS data.", error));
@@ -143,21 +113,6 @@
             } else {
                 map.fitBounds(bounds, { padding: [50, 50] });
             }
-        }
-
-        function updateAlertList(sosList) {
-            const alertContainer = document.getElementById("alerts");
-            alertContainer.innerHTML = "";
-
-            sosList.forEach(sos => {
-                const alertItem = document.createElement("div");
-                alertItem.className = "alert-item";
-                alertItem.innerHTML = `
-                    <strong>${sos.user_id}</strong> at ${sos.lat}, ${sos.lon}
-                    <div class="alert-time">📅 ${new Date(sos.timestamp).toLocaleString()}</div>
-                `;
-                alertContainer.appendChild(alertItem);
-            });
         }
 
         initializeMap();
