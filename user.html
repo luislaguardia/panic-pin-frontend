@@ -294,7 +294,7 @@
                     lon: userLocation.lon
                 };
 
-                fetch("http://localhost:5001/sos", {
+                fetch("https://panic-pin-server.onrender.com/sos", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(sosData)
