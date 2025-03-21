@@ -77,19 +77,19 @@
             }).addTo(map);
         }
 
-        function fetchSOS() {
-            fetch("https://panic-pin-server.onrender.com/get_sos")
-                .then(response => response.json())
-                .then(sosList => {
-                    if (sosList.length > 0) {
-                        document.getElementById("output").innerHTML = `🚨 ${sosList.length} distress signals received!`;
-                        updateMap(sosList);
-                    } else {
-                        document.getElementById("output").innerHTML = "No active distress signals.";
-                    }
-                })
-                .catch(error => console.log("Error fetching SOS data.", error));
-        }
+function fetchSOS() {
+    fetch("https://panic-pin-server.onrender.com/get_sos")
+        .then(response => response.json())
+        .then(sosList => {
+            let output = "";
+            sosList.forEach((sos, index) => {
+                output += `<p>🚨 <strong>${sos.user_id}</strong> at ${sos.lat}, ${sos.lon} <br> ⏱️ ${new Date(sos.timestamp).toLocaleString()}</p>`;
+            });
+            document.getElementById("output").innerHTML = output || "No active distress signals.";
+            updateMap(sosList);
+        })
+        .catch(error => console.log("Error fetching SOS data.", error));
+}
 
         function updateMap(sosList) {
             if (!map) return;
